@@ -23,13 +23,16 @@ export default function ScannBook(){
     
   };
 return (
-  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+  <View style={styles.container}>
+    <Text>Scanner un livre</Text>
+    <View style={styles.barcodebox}>
     {scanning && (
       <BarCodeScanner
         onBarCodeScanned={handleBarCodeScannedBook}
         style={{ height: 400, width: 400 }}
       />
     )}
+    </View>
     <Text>{scanning ? 'Scanning...' : 'Not scanning'}</Text>
     <Button
       title="Start scanning"
@@ -39,6 +42,7 @@ return (
       title="Stop scanning"
       onPress={() => setScanning(false)}
     />
+    <Text style={styles.maintext}>{textBook}</Text>
   </View>
 );
 }

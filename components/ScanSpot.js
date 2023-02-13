@@ -5,8 +5,10 @@ import { BarCodeScanner } from 'expo-barcode-scanner';
 export default function ScannSpot(){
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
+    const [isFromScannCard, setIsFromScannCard] = useState(true);
     const [text, setText] = useState('Not yet scanned')
     const navigation = useNavigation();
+    const idSpot = 22;
     const barcodeScannerRef = useRef();
     const askForCameraPermission = () => {
           (async () => {
@@ -23,7 +25,8 @@ export default function ScannSpot(){
       try{
         setScanned(true);
         setText(data)
-        console.log('Type: ' + type + '\nData: ' + data)
+        setIsFromScannCard(false);
+        navigation.navigate('ScannBook', { id: idSpot }) 
       }catch (error) {
         console.log(error);
      }
@@ -61,7 +64,7 @@ export default function ScannSpot(){
                 style={{ height: 400, width: 400 }} />
             </View>
             <Text style={styles.maintext}>{text}</Text>
-            {scanned && <Button onPress={()=>navigation.push('ScannBook')} title='Scanner un livre'></Button>}
+            {/* {scanned && <Button onPress={()=>navigation.push('ScannBook')} title='Scanner un livre'></Button>} */}
             {scanned && <Button title={'Scan again?'} onPress={() => setScanned(false)} color='tomato' />}
           </View>
         );

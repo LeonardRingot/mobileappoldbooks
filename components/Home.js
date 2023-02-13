@@ -1,37 +1,60 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation, NavigationContainer } from '@react-navigation/native';
 export default function Home(){
     const navigation = useNavigation();
     return (
-        <View style={styles.container}>
+      <LinearGradient  
+        colors={['#0568b8', '#00d4ff']} style={styles.container}
+      >
           <Text style={styles.text}>Cliquez sur le bouton Scanner une carte pour 
 emprunter  un livre et cliquez sur le bouton 
 Scanner un point pour rendre un livre </Text>
-          <Button style={styles.button}onPress={() =>navigation.navigate('ScannCard')} title='scanner une carte'></Button>
-        <Button style={styles.button} onPress={() =>navigation.navigate('ScannSpot')} title='scanner un spot'></Button>
-          <StatusBar style="auto" />
-        </View>
+
+        <TouchableOpacity 
+            style={styles.firstButton} 
+            onPress={() =>navigation.navigate('ScannCard')}
+          >
+            <Text style={styles.buttonText}>Scanner une carte</Text>
+          </TouchableOpacity>
+        <TouchableOpacity  style={styles.button}
+        onPress={() =>navigation.navigate('ScannSpot')}
+        >
+ <Text style={styles.buttonText}>Scanner un point</Text>
+        
+        
+        </TouchableOpacity>
+        </LinearGradient>
       );
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  button: {
-    margin: 10,
+  firstButton: {
+    marginTop: 20,
     padding: 15,
-    backgroundColor: '#5cb85c',
+    width: 200,
     borderRadius: 5,
+    alignSelf: 'center',
+    marginBottom: 30,
+    backgroundColor: 'red'
   },
   buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
+    color: 'white',
+    fontSize: 18,
     textAlign: 'center',
+  },
+  button: {
+    marginTop: 20,
+    padding: 15,
+    width: 200,
+    borderRadius: 5,
+    alignSelf: 'center',
+    backgroundColor: 'red'
   },
   text: {
     margin: 20,

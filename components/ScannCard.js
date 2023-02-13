@@ -3,12 +3,15 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 import { useNavigation, NavigationContainer } from '@react-navigation/native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
+
 export default function ScannCard(){
   const [scanned, setScanned] = useState(false);
+  const [isFromScannCard, setIsFromScannCard] = useState(true);
   const [hasPermission, setHasPermission] = useState(null);
   const [text, setText] = useState('Not yet scanned')
   const navigation = useNavigation();
   const barcodeScannerRef = useRef();
+  const [code, setCode] = useState()
   const askForCameraPermission = () => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -20,12 +23,13 @@ useEffect(() => {
 askForCameraPermission();
 }, []);
    
-    const handleBarCodeScanned = ({ type, data }) => {
+    const handleBarCodeScanned = ({ type, id }) => {
         try{
     setScanned(true);
-    setText(`Bar code with type ${type} and data ${data} has been scanned!`);
-   // Navigate to the ScannBook component
-   navigation.navigate('ScannBook')
+    const id = 223345
+    setIsFromScannCard(true);
+    setText(`Bar code with type ${type} and data ${id} has been scanned!`);
+   navigation.navigate('ScannBook', { id: id })  
    barcodeScannerRef.current.pausePreview();
  }catch (error) {
     console.log(error);

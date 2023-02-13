@@ -3,25 +3,34 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import { useNavigation, NavigationContainer } from '@react-navigation/native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-export default function ScannBook(){
+export default function ScannBook({navigation, route}){
   const [scanning, setScanning] = useState(false);
+  const [message, setMessage] = useState('');
+  const [isFromScannCard, setIsFromScannCard] = useState(true);
   const [scannedBook, setScannedBook] = useState(false);
   const [textBook, setTextBook] = useState('Not yet scanned')
   const [submit, setSubmit] = useState(false);
-    console.log('ScannBook component loaded');
-  
-  //  // What happens when we scan the bar code
-   const handleBarCodeScannedBook = ({ type, data }) => {
-    try{
-      setScannedBook(true);
-      setTextBook(data)
-    console.log('Type: ' + type + '\nData: ' + data)
-    }catch(error)
-    {
-      console.log(error)
+  const handleBarCodeScannedBook = ({ type, data }) => {
+    if (route && route.params) {
+      const { id, source } = route.params;
+      try {
+        setScannedBook(true);
+        if (source === 'ScannCard') {
+          console.log(' JE SUIS PASSE OU PAS Type: ' + type + '\nData: ' + id)
+           setMessage(`Vous pouvez emprunter ce livre 5 semaines`);
+           message = 'a'
+        } else if (source === 'ScannSpot') {
+          setMessage(`Remettez le livre dans le spot ${id}`);
+        }
+        console.log('Type: ' + type + '\nData: ' + id)
+      } catch (error) {
+        console.log(error)
+      }
     }
     
   };
+  
+  
 return (
   <View style={styles.container}>
     <Text>Scanner un livre</Text>
@@ -43,6 +52,7 @@ return (
       onPress={() => setScanning(false)}
     />
     <Text style={styles.maintext}>{textBook}</Text>
+    <Text style={styles.message}>{message}</Text>
   </View>
 );
 }
@@ -52,6 +62,10 @@ const styles = StyleSheet.create({
       backgroundColor: '#fff',
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    message: {
+      fontSize: 16,
+      margin: 20,
     },
     maintext: {
       fontSize: 16,

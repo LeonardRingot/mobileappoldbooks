@@ -9,6 +9,7 @@ export default function ScannSpot(){
     const [text, setText] = useState('Not yet scanned')
     const navigation = useNavigation();
     const idSpot = 22;
+    const source="ScannSpot"
     const barcodeScannerRef = useRef();
     const askForCameraPermission = () => {
           (async () => {
@@ -26,7 +27,7 @@ export default function ScannSpot(){
         setScanned(true);
         setText(data)
         setIsFromScannCard(false);
-        navigation.navigate('ScannBook', { id: idSpot }) 
+        navigation.navigate('ScannBook', { id: idSpot, source:source}) 
       }catch (error) {
         console.log(error);
      }

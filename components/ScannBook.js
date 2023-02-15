@@ -8,21 +8,58 @@ export default function ScannBook({navigation, route}){
   const [message, setMessage] = useState('');
   const [isFromScannCard, setIsFromScannCard] = useState(true);
   const [scannedBook, setScannedBook] = useState(false);
+    const [code, setCode] = useState()
+  const [isValid, setIsValid] = useState(false);
   const [textBook, setTextBook] = useState('Not yet scanned')
   const [submit, setSubmit] = useState(false);
+
+const bookList =[
+  {
+    "nameBook":"The Witcher 1",
+    "nameAuthor":"andrzej sapkowski"
+  },
+  {
+    "nameBook":"The Witcher 2",
+    "nameAuthor":"andrzej sapkowski"
+  },
+  {
+    "nameBook":"The Witcher 2",
+    "nameAuthor":"andrzej sapkowski"
+  },
+  {
+    "nameBook":"The Witcher 3",
+    "nameAuthor":"andrzej sapkowski"
+  }
+
+]
+
   const handleBarCodeScannedBook = ({ type, data }) => {
-    if (route && route.params) {
+    if (route && route.params ) {
       const { id, source } = route.params;
       try {
         setScannedBook(true);
+        setCode(data);
+       let codeFound = false;
         if (source === 'ScannCard') {
-          console.log(' JE SUIS PASSE OU PAS Type: ' + type + '\nData: ' + id)
-           setMessage(`Vous pouvez emprunter ce livre 5 semaines`);
-           message = 'a'
+          bookList.forEach(book =>{
+            const parsedData = JSON.parse(data);
+            console.log(parsedData)
+            console.log(book.nameAuthor)
+            if (book.nameAuthor === parsedData[0].nameBook.trim()){
+              codeFound = true;
+              setIsValid(true);
+              setMessage(`Vous pouvez emprunter ce livre 5 semaines`);
+            }
+          });
+          if (!codeFound) {
+            setIsValid(false);
+            alert("Invalid Code", "The code you scanned is not valid. Please try again.");
+          }
+           
         } else if (source === 'ScannSpot') {
           setMessage(`Remettez le livre dans le spot ${id}`);
         }
-        console.log('Type: ' + type + '\nData: ' + id)
+        console.log('Type: ' + type + '\nData: ' + id);
       } catch (error) {
         console.log(error)
       }

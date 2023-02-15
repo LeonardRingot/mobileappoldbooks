@@ -8,7 +8,9 @@ export default function ScannSpot(){
     const [isFromScannCard, setIsFromScannCard] = useState(true);
     const [text, setText] = useState('Not yet scanned')
     const navigation = useNavigation();
-    const idSpot = 22;
+    const URL = 'http://192.168.0.47:5000'
+    const [spotList, setspotList] = useState([]);
+    const [isValid, setIsValid] = useState(false);
     const source="ScannSpot"
     const barcodeScannerRef = useRef();
     const askForCameraPermission = () => {
@@ -22,16 +24,51 @@ export default function ScannSpot(){
       askForCameraPermission();
     }, []);
      // What happens when we scan the bar code
-     const handleBarCodeScanned = ({ type, data }) => {
-      try{
+
+
+     useEffect(() => {
+      const requestOptions = {
+        method: 'GET',
+        redirect: 'follow',
+      };
+    
+     const myspots = fetch(`${URL}/api/spots`, requestOptions)
+        .then((response) => response.json())
+        .then((result) => setspotList(result))
+        .catch((error) => console.log('error', error));
+        console.log(myspots)
+    }, [URL]);
+  
+    const handleBarCodeScanned = ({ type, data, _id }) => {
+      try {
         setScanned(true);
-        setText(data)
-        setIsFromScannCard(false);
-        navigation.navigate('ScannBook', { id: idSpot, source:source}) 
-      }catch (error) {
+        setText(data);
+        const source = 'ScannSpot';
+        let spotFound = false;
+        console.log('Scanned code:', data.trim());
+    
+        spotList.forEach((spot) => {
+          console.log('Spot:', spot);
+          const spotId = spot._id;
+          console.log('Spot ID:', spotId);
+          console.log('Scanned code:', data.trim());
+          const parsedData = JSON.parse(data);
+          if (spotId === parsedData[0]._id.trim()) {
+            spotFound = true;
+            setIsValid(true);
+            navigation.navigate('ScannBook', { spotId: spotId, source: source });
+            barcodeScannerRef.current.pausePreview();
+          }
+        });
+    
+        if (!spotFound) {
+          setIsValid(false);
+          alert('Unknown spot', 'The spot you scanned is not known. Please try again.');
+        }
+    
+      } catch (error) {
         console.log(error);
-     }
-      
+      }
     };
     useEffect(() => {
       return () => {
@@ -65,8 +102,15 @@ export default function ScannSpot(){
                 style={{ height: 400, width: 400 }} />
             </View>
             <Text style={styles.maintext}>{text}</Text>
-            {/* {scanned && <Button onPress={()=>navigation.push('ScannBook')} title='Scanner un livre'></Button>} */}
             {scanned && <Button title={'Scan again?'} onPress={() => setScanned(false)} color='tomato' />}
+            {isValid && (
+        <Button
+          title={'Continue to ScannBook'}
+          onPress={() => {
+            navigation.navigate('ScannBook', { id: spotList[0]._id, source: 'ScannSpot' });
+          }}
+        />
+      )}
           </View>
         );
 }

@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 import { useNavigation, NavigationContainer } from '@react-navigation/native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
-
 export default function ScannCard(){
   const [scanned, setScanned] = useState(false);
   const [isFromScannCard, setIsFromScannCard] = useState(true);
@@ -11,6 +10,8 @@ export default function ScannCard(){
   const [text, setText] = useState('Not yet scanned')
   const navigation = useNavigation();
   const barcodeScannerRef = useRef();
+  const [userList, setUserList] = useState([]);
+  const URL = 'http://192.168.0.47:5000'
   const [code, setCode] = useState()
   const [isValid, setIsValid] = useState(false);
   const askForCameraPermission = () => {
@@ -24,72 +25,34 @@ useEffect(() => {
 askForCameraPermission();
 }, []);
 
-const UserList = [
-  {
-      "name": "Gaetan",
-      "code": "43DZFDFR"
-  },
-  {
-      "name": "Marc",
-      "code": "ZAFH34R"
-  },
-  {
-      "name": "LucF",
-      "code": "A4JAF432"
-  },
-  {
-      "name": "LucV",
-      "code": "FZAEU3D3A"
-  },
-  {
-      "name": "Nico",
-      "code": "U34R543"
-  },
-  {
-      "name": "Flo",
-      "code": "IN43NI32"
-  },
-  {
-      "name": "Leonard",
-      "code": "FIF34R34R"
-  },
-  {
-      "name": "Rémy",
-      "code": "Ff3AF432"
-  },
-  {
-      "name": "Vincent",
-      "code": "1R3FAF"
-  },
-  {
-      "name": "Ghedeon",
-      "code": "343DJIE"
-  },
-  {
-      "name": "Alexis",
-      "code": "34RNJ3D"
-  },
-  {
-      "name": "Brigitte",
-      "code": "JI34NF32",
-  }
-]
-   
+
+useEffect(() => {
+  const requestOptions = {
+    method: 'GET',
+    redirect: 'follow',
+  };
+
+  fetch(`${URL}/api/list`, requestOptions)
+    .then((response) => response.json())
+    .then((result) => setUserList(result))
+    .catch((error) => console.log('error', error));
+}, [URL]);
+
 const handleBarCodeScanned = ({ type, data, id }) => {
   try {
     setScanned(true);
-    setCode(data);
-    const id = 223345
-    const source = "ScannCard";
+    setText(data);
+    const source = 'ScannCard';
     let codeFound = false;
-    console.log('first console log', data)
-    
-    UserList.forEach(user => {
-      console.log('user: ' , user)
-      console.log('User code:',data);
-  console.log('Scanned code:', data.trim());
-  const parsedData = JSON.parse(data);
-  if (user.code === parsedData[0].code.trim()){
+    console.log('Scanned code:', data.trim());
+
+    userList.forEach((user) => {
+      console.log('User:', user);
+      const id = user.code;
+      console.log('User code:', user.code);
+      console.log('Scanned code:', data.trim());
+      const parsedData = JSON.parse(data);
+      if (user.code === parsedData[0].code.trim()){
         codeFound = true;
         setIsValid(true);
         navigation.navigate('ScannBook', { id: id, source: source });
@@ -99,7 +62,7 @@ const handleBarCodeScanned = ({ type, data, id }) => {
 
     if (!codeFound) {
       setIsValid(false);
-      alert("Invalid Code", "The code you scanned is not valid. Please try again.");
+      alert('Unknown user', 'The user you scanned is not known. Please try again.');
     }
 
     setIsFromScannCard(true);
@@ -140,8 +103,8 @@ const handleBarCodeScanned = ({ type, data, id }) => {
               style={{ height: 400, width: 400 }} />
           </View>
           <Text style={styles.maintext}>{text}</Text>
-            {scanned && <Button onPress={()=>navigation.push('ScannBook')} title='Scanner un livre'></Button>}
           {scanned && <Button title={'Scan again?'} onPress={() => setScanned(false)} color='tomato' />}
+          {isValid === false && <Text>Unknown user</Text>}
         </View>
       );
 }

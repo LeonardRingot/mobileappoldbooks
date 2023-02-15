@@ -1,20 +1,6 @@
 import axios from "axios";
+const url= 'http://localhost:5000';
 
-export function requeteConnexion(code) {
-  var data = JSON.stringify({
-    "code": code
-  });
-  var configConnexion = {
-    method: 'post',
-    url: `http://localhost:5000/api/v1/login`,
-    headers: {
-      'Content-Type': 'application/json'
-      
-    },
-    data: data
-  };
-  return axios(configConnexion);
-}
 export function requeteBook(nameBook, nameAuthor)
 {
     var data = json.stringify({
@@ -48,4 +34,18 @@ export function requeteSpot(nameSpot)
     data: data
     };
     return axios(configSpot);
+}
+
+export function requeteList()
+{
+    
+    var configList ={
+        method: 'get',
+    url: `http://localhost:5000/api/list`,
+    headers: {
+      'Content-Type': 'application/json'
+      
+    },
+    };
+    return axios(configList);
 }

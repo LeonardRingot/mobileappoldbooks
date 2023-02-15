@@ -1,9 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import axios from 'axios';
 import { useNavigation, NavigationContainer } from '@react-navigation/native';
 export default function Home(){
     const navigation = useNavigation();
+  
     return (
       <LinearGradient  
         colors={['#0568b8', '#00d4ff']} style={styles.container}

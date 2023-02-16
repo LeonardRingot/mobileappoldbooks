@@ -1,22 +1,18 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import { useNavigation, NavigationContainer } from '@react-navigation/native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import * as ServiceAPI from '../services/serviceAPI'
 export default function ScannBook({navigation, route}){
   const [scanning, setScanning] = useState(false);
   let [data, setData] = useState(null)
   const [message, setMessage] = useState('');
   const [isFromScannCard, setIsFromScannCard] = useState(true);
   const [scannedBook, setScannedBook] = useState(false);
-   const URL = 'http://192.168.0.47:5000'
+  const URL = 'http://192.168.10.107:5000'
     const [code, setCode] = useState()
   const [isValid, setIsValid] = useState(false);
   const [bookList, setBookList] = useState([]);
   const [textBook, setTextBook] = useState('Not yet scanned')
-  const [submit, setSubmit] = useState(false);
 
 useEffect(() => {
   const requestOptions = {
@@ -46,7 +42,7 @@ const handleBarCodeScannedBook = ({ type, data }) => {
             setIsValid(true);
             setMessage(`Vous pouvez emprunter ce livre 5 semaines`);
 
-            // Update the book record in the database
+            // Met à jour le livre, prend défini l'userID et met le spot ID null = pas de spot
             const requestOptions = {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },

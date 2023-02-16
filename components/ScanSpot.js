@@ -8,7 +8,7 @@ export default function ScannSpot(){
     const [isFromScannCard, setIsFromScannCard] = useState(true);
     const [text, setText] = useState('Not yet scanned')
     const navigation = useNavigation();
-    const URL = 'http://192.168.0.47:5000'
+    const URL = 'http://192.168.10.107:5000'
     const [spotList, setspotList] = useState([]);
     const [isValid, setIsValid] = useState(false);
     const source="ScannSpot"
@@ -32,11 +32,10 @@ export default function ScannSpot(){
         redirect: 'follow',
       };
     
-     const myspots = fetch(`${URL}/api/spots`, requestOptions)
+      fetch(`${URL}/api/spots`, requestOptions)
         .then((response) => response.json())
         .then((result) => setspotList(result))
         .catch((error) => console.log('error', error));
-        console.log(myspots)
     }, [URL]);
   
     const handleBarCodeScanned = ({ type, data, _id }) => {

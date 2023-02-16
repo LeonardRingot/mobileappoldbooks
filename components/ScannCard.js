@@ -11,7 +11,7 @@ export default function ScannCard(){
   const navigation = useNavigation();
   const barcodeScannerRef = useRef();
   const [userList, setUserList] = useState([]);
-  const URL = 'http://192.168.0.47:5000'
+  const URL = 'http://192.168.10.107:5000'
   const [code, setCode] = useState()
   const [isValid, setIsValid] = useState(false);
   const askForCameraPermission = () => {
@@ -62,7 +62,7 @@ const handleBarCodeScanned = ({ type, data, id }) => {
 
     if (!codeFound) {
       setIsValid(false);
-      alert('Unknown user', 'The user you scanned is not known. Please try again.');
+      alert(`Utilisateur inconnu', 'L'utilisateur ne figure pas dans notre base de données, veillez vous inscrire à la bibiothèque`);
     }
 
     setIsFromScannCard(true);

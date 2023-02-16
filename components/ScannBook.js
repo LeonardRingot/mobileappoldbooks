@@ -36,18 +36,16 @@ const handleBarCodeScannedBook = ({ type, data }) => {
       if (source === 'ScannCard') {
         bookList.forEach(book => {
           const parsedData = JSON.parse(data);
-          console.log('c ca lundifined',parsedData)
           if (book.nameBook === parsedData[0].nameBook.trim()) {
             codeFound = true;
             setIsValid(true);
             setMessage(`Vous pouvez emprunter ce livre 5 semaines`);
-
             // Met à jour le livre, prend défini l'userID et met le spot ID null = pas de spot
             const requestOptions = {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                userId: id,
+                code: id,
                 date: new Date(),
                 spotID: null
               })
@@ -84,7 +82,7 @@ const handleBarCodeScannedBook = ({ type, data }) => {
                 body: JSON.stringify({
                   // nameBook:book.nameBook,
                   // authorBook:book.authorBook,
-                  userId: null,
+                  code: null,
                   date: new Date(),
                   spotID: spotId // Use the spot ID as the new spot ID for the book
                 })
@@ -103,13 +101,10 @@ const handleBarCodeScannedBook = ({ type, data }) => {
             setIsValid(false);
             alert("Invalid Code", "The code you scanned is not valid. Please try again.");
           }
-      
-          console.log('Type: ' + type + '\nData: ' + spotId);
         } catch (error) {
           console.log(error)
         }
       }
-      console.log('Type: ' + type + '\nData: ' + spotId);
     } catch (error) {
       console.log(error)
     }

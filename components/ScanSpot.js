@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef} from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
 import { useNavigation, NavigationContainer } from '@react-navigation/native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 export default function ScannSpot(){
@@ -94,43 +94,86 @@ export default function ScannSpot(){
         }
         return (
           <View style={styles.container}>
-            <Text>Scanner un point, vous serez renvoyé au Scan livre </Text>
+            <Text style={styles.header}>Scannez un point pour accéder à la page du livre</Text>
             <View style={styles.barcodebox}>
               <BarCodeScanner
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                style={{ height: 400, width: 400 }} />
+                style={styles.barcodeScanner}
+              />
             </View>
             <Text style={styles.maintext}>{text}</Text>
-            {scanned && <Button title={'Scan again?'} onPress={() => setScanned(false)} color='tomato' />}
+            {scanned && (
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => setScanned(false)}
+              >
+                <Text style={styles.buttonText}>Scanner un autre point</Text>
+              </TouchableOpacity>
+            )}
             {isValid && (
-        <Button
-          title={'Continue to ScannBook'}
-          onPress={() => {
-            navigation.navigate('ScannBook', { id: spotList[0]._id, source: 'ScannSpot' });
-          }}
-        />
-      )}
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  navigation.navigate('ScannBook', { id: spotList[0]._id, source: 'ScannSpot' });
+                }}
+              >
+                <Text style={styles.buttonText}>Continuer vers ScannBook</Text>
+              </TouchableOpacity>
+            )}
           </View>
         );
 }
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-      maintext: {
-        fontSize: 16,
-        margin: 20,
-      },
-      barcodebox: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 300,
-        width: 300,
-        overflow: 'hidden',
-        borderRadius: 30,
-        backgroundColor: 'tomato'
-      }
-  });
+  container: {
+    flex: 1,
+    backgroundColor: '#F5F5F5',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24,
+  },
+  header: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  maintext: {
+    fontSize: 16,
+    marginVertical: 16,
+    textAlign: 'center',
+    color: '#999',
+  },
+  barcodebox: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 300,
+    width: 300,
+    borderRadius: 16,
+    backgroundColor: '#FFF',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  barcodeScanner: {
+    height: '100%',
+    width: '100%',
+  },
+  button: {
+    backgroundColor: '#F25278',
+    borderRadius: 32,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    marginVertical: 8,
+  },
+  buttonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+});

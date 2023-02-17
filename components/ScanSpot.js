@@ -8,7 +8,7 @@ export default function ScannSpot(){
     const [isFromScannCard, setIsFromScannCard] = useState(true);
     const [text, setText] = useState('Not yet scanned')
     const navigation = useNavigation();
-    const URL = 'http://192.168.10.107:5000'
+    const URL = 'http://192.168.10.109:5000'
     const [spotList, setspotList] = useState([]);
     const [isValid, setIsValid] = useState(false);
     const source="ScannSpot"
@@ -48,6 +48,7 @@ export default function ScannSpot(){
     
         spotList.forEach((spot) => {
           console.log('Spot:', spot);
+          console.log(spot)
           const spotId = spot._id;
           console.log('Spot ID:', spotId);
           console.log('Scanned code:', data.trim());

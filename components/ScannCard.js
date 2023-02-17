@@ -11,7 +11,7 @@ export default function ScannCard(){
   const navigation = useNavigation();
   const barcodeScannerRef = useRef();
   const [userList, setUserList] = useState([]);
-  const URL = 'http://192.168.10.107:5000'
+  const URL = 'http://192.168.10.109:5000'
   const [code, setCode] = useState()
   const [isValid, setIsValid] = useState(false);
   const askForCameraPermission = () => {
@@ -49,13 +49,15 @@ const handleBarCodeScanned = ({ type, data, id }) => {
     userList.forEach((user) => {
       console.log('User:', user);
       const id = user.code;
+      const name = user.name
       console.log('User code:', user.code);
+      console.log('user name:', user.name)
       console.log('Scanned code:', data.trim());
       const parsedData = JSON.parse(data);
       if (user.code === parsedData[0].code.trim()){
         codeFound = true;
         setIsValid(true);
-        navigation.navigate('ScannBook', { id: id, source: source });
+        navigation.navigate('ScannBook', { id: id,name:name, source: source });
         barcodeScannerRef.current.pausePreview();
       }
     });

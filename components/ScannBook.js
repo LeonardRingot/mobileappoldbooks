@@ -6,9 +6,10 @@ export default function ScannBook({navigation, route}){
   const [scanning, setScanning] = useState(false);
   let [data, setData] = useState(null)
   const [message, setMessage] = useState('');
+  
   const [isFromScannCard, setIsFromScannCard] = useState(true);
   const [scannedBook, setScannedBook] = useState(false);
-  const URL = 'http://192.168.10.107:5000'
+  const URL = 'http://192.168.10.109:5000'
     const [code, setCode] = useState()
   const [isValid, setIsValid] = useState(false);
   const [bookList, setBookList] = useState([]);
@@ -22,8 +23,9 @@ useEffect(() => {
 
   fetch(`${URL}/api/books`, requestOptions)
     .then((response) => response.json())
-    .then((result) => setBookList(result))
-    .catch((error) => console.log('error', error));
+    .then((result) =>{
+     setBookList(result)
+    }).catch((error) => console.log('error', error));
 }, [URL]);
 
 const handleBarCodeScannedBook = ({ type, data }) => {
@@ -33,9 +35,11 @@ const handleBarCodeScannedBook = ({ type, data }) => {
       setScannedBook(true);
       setCode(data);
       let codeFound = false;
+      
       if (source === 'ScannCard') {
         bookList.forEach(book => {
           const parsedData = JSON.parse(data);
+          
           if (book.nameBook === parsedData[0].nameBook.trim()) {
             codeFound = true;
             setIsValid(true);
@@ -115,6 +119,7 @@ const handleBarCodeScannedBook = ({ type, data }) => {
 return (
   <View style={styles.container}>
     <Text>Scanner un livre</Text>
+    
     <View style={styles.barcodebox}>
     {scanning && (
       <BarCodeScanner
